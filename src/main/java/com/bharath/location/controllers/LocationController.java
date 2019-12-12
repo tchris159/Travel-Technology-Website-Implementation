@@ -1,6 +1,9 @@
 package com.bharath.location.controllers;
 
 import java.util.List;
+
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -10,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bharath.location.model.Location;
+import com.bharath.location.repos.LocationRepository;
 import com.bharath.location.service.LocationService;
 import com.bharath.location.util.EmailUtil;
+import com.bharath.location.util.ReportUtil;
 
 @Controller
 @Component
@@ -22,6 +27,15 @@ public class LocationController {
 	
 	@Autowired
 	EmailUtil emailUtil;
+	
+	@Autowired
+	LocationRepository repository;
+	
+	@Autowired
+	ReportUtil reportUtil;
+	
+	@Autowired
+	ServletContext sc;
 	
 	/*
 	 * Controller method to show the URL after Create Location basically the homepage
@@ -78,5 +92,16 @@ public class LocationController {
 		List<Location> locations = service.getAlllocation();
 		modelMap.addAttribute("locations", locations);
 		return "displayLocations";
+	}
+	
+	
+	@RequestMapping("/generateReport")
+	public String generateReport() {
+		
+		String path = sc.getRealPath("/");
+		
+		List<Object[]> data = repository.findTypeAndTypeCount();
+		reportUtil.generatePieChart(path, data);
+		return "report";
 	}
 }

@@ -3,11 +3,9 @@ package com.bharath.location.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import com.bharath.location.model.Location;
 
-@Service
+
 public interface LocationService {
 
 	// Take a location model object and save it into the database or pass it into
